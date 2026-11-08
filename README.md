@@ -44,6 +44,8 @@ Actividad 1 - Nava Peralta Kevin
 
  ![Endpoint nombre](docs/img/endpointNombre.png)
 
+**Link al endpoint:** https://94.130.98.27/spring/nombre
+
 ---
 
 ### 2. `GET /numero`
@@ -70,6 +72,8 @@ public int getNumero() {
 
 
 ![Endpoint numero](docs/img/endpointNumero.png)
+
+**Link al enpoint:** https://94.130.98.27/spring/numero
 
 ---
 
@@ -111,3 +115,6 @@ public class MateriaController {
 ```
 
 ![Endpoint materias](docs/img/endpointMaterias.png)
+
+
+**Link al endpoint:** https://94.130.98.27/spring/materias
