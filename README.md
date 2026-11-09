@@ -1,120 +1,60 @@
-# Actividad 1 – API REST con Spring Boot
+
+# Actividad 2 - Spring Boot MVC con Thymeleaf
 
 - **Alumno:** Nava Peralta Kevin Peralta
 - **Materia:** Programación Web
 
-## Descripción
+Proyecto de Spring Boot que usa el patrón MVC con vistas Thymeleaf, una clase DTO y un endpoint POST de tipo REST. 
 
-Creación de una proyecto sencillo creado con **Spring Boot** y la dependencia **Spring Web**. Expone varios endpoints que devuelven texto, un número, una lista de objetos en formato JSON y una imagen. 
+## Enlaces
 
+- **Repositorio de GitHub:** https://github.com/kp720/NPKPact2_t4
+- **Proyecto en el VPS (puerto 2753):** http://94.130.98.27:2753/productos
+- **Actividad 1 (sigue corriendo en su puerto original):** http://94.130.98.27:2750/nombre
+
+## Qué incluye
+
+| Requisito | Dónde está |
+|---|---|
+| DTO | `ProductoDTO` (id, nombre, precio, categoría) |
+| Vista con lista (`Model` + `th:each`) | `lista.html` |
+| Vista con formulario (`@ModelAttribute`) | `formulario.html` |
+| `@RequestParam` | Filtro por categoría en `/productos?categoria=...` |
+| `@PathVariable` | Detalle en `/productos/{id}` |
+| `@Value` | Propiedades `app.autor` y `app.proyecto`, mostradas en la lista |
+| POST REST con JSON | `POST /api/productos` |
 
 ## Endpoints
 
-| Método | Ruta | Controlador | Qué devuelve | Tipo de respuesta |
-|---|---|---|---|---|
-| GET | `/nombre` | `InfoController` | Texto con el nombre del proyecto y autor | `text/plain` |
-| GET | `/numero` | `InfoController` | Un número entero | `text/plain` |
-| GET | `/materias` | `MateriaController` | Lista de materias | `application/json` |
-
-### 1. `GET /nombre`
-Devuelve un texto con el nombre del proyecto y del autor, para identificar de quién es cada instancia corriendo en el servidor.
-
-```java
-@RestController
-public class InfoController {
-
-    @GetMapping("/nombre")
-    public String getNombre() {
-        return "Actividad 1 - Nava Peralta Kevin";
-    }
-}
-```
-
-**Cómo funciona:**
-
-- `@RestController` le indica a Spring que la clase atiende peticiones HTTP y que lo que devuelven sus métodos se envía directamente como cuerpo de la respuesta.
-- `@GetMapping("/nombre")` asocia el método a las peticiones `GET` hacia la ruta `/nombre`.
-- Como el método devuelve un `String`, Spring responde con `Content-Type: text/plain`.
-
-**Respuesta:**
-
-```
-Actividad 1 - Nava Peralta Kevin
-```
-
- ![Endpoint nombre](docs/img/endpointNombre.png)
-
-**Link al endpoint:** https://94.130.98.27/spring/nombre
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/productos` | Lista de productos (acepta `?categoria=`) |
+| GET | `/productos/{id}` | Detalle de un producto |
+| GET | `/productos/nuevo` | Formulario para agregar un producto |
+| POST | `/productos/nuevo` | Recibe el formulario y guarda el producto |
+| POST | `/api/productos` | Recibe un JSON con el DTO y responde `201` con el producto creado |
 
 ---
 
-### 2. `GET /numero`
+## Capturas de pantalla
 
-Devuelve un número entero.
+### 1. Listado con `th:each`
 
-```java
-@GetMapping("/numero")
-public int getNumero() {
-    return 42;
-}
-```
+![Listado de productos](docs/img/lista.png)
 
-**Cómo funciona:**
+### 2. Formulario con `@ModelAttribute`
 
-- El método está en el mismo controlador (`InfoController`), por eso comparte el `@RestController`.
-- Al devolver un `int`, Spring lo convierte a texto y lo envía en el cuerpo de la respuesta.
+![Formulario](docs/img/formulario.png)
 
-**Respuesta:**
+### 3. Filtro con `@RequestParam`
 
-```
-42
-```
+![Filtro por categoría](docs/img/request.png)
 
+### 4. Detalle con `@PathVariable`
 
-![Endpoint numero](docs/img/endpointNumero.png)
+![Detalle de producto](docs/img/path.png)
 
-**Link al enpoint:** https://94.130.98.27/spring/numero
+### 5. Petición POST en Postman / Bruno
 
----
+![POST en Postman](docs/img/postman.png)
 
-### 3. `GET /materias`
-
-Devuelve un listado de materias como una lista de objetos.
-
-```java
-@RestController
-public class MateriaController {
-
-    public record Materia(int id, String nombre, int creditos) {}
-
-    @GetMapping("/materias")
-    public List<Materia> getMaterias() {
-        return List.of(
-            new Materia(1, "Programacion Web", 8),
-            new Materia(2, "Bases de Datos", 8),
-            new Materia(3, "Redes", 6)
-        );
-    }
-}
-```
-
-**Cómo funciona:**
-
-- `record Materia(...)` define un objeto simple e inmutable con tres campos: `id`, `nombre` y `creditos`.
-- `List.of(...)` crea la lista simulada. No hay base de datos: los datos están escritos en el código.
-- Spring Boot incluye la librería **Jackson**, que convierte automáticamente la lista de objetos Java a **JSON** y agrega el encabezado `Content-Type: application/json`.
-
-**Respuesta:**
-
-```json
-[
-  { "id": 1, "nombre": "Programacion Web", "creditos": 8 },
-  { "id": 2, "nombre": "Bases de Datos", "creditos": 8 },
-  { "id": 3, "nombre": "Redes", "creditos": 6 }
-]
-```
-
-![Endpoint materias](docs/img/endpointMaterias.png)
-
-
-**Link al endpoint:** https://94.130.98.27/spring/materias
